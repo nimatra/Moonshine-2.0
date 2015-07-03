@@ -127,23 +127,26 @@ router.Exchange = function (res) {
     // Authorize a client with the loaded credentials, then call the
     // Google Calendar API.
 
-    data = querystring.stringify({
+    var data = querystring.stringify({
         code: router.code,
         client_id: router.credentials.web.client_id.toString(),
         client_secret: router.credentials.web.client_secret.toString(),
         redirect_uri: router.credentials.web.redirect_uris[0],
         grant_type: 'authorization_code'
     });
-    options = {
+    var options = {
         host: 'https://www.googleapis.com',
-        path: 'oauth2/v3/token'+'?'+data,
+        path: 'oauth2/v3/token',
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': data.length
         }
     };
     router.res = res;
-    http.request(options, exchangeApiCallback).end();
+    var httpPost = http.request(options, exchangeApiCallback);
+    httpPost.write(data);
+    httpPost.end();
 };
 
 /**
