@@ -136,7 +136,7 @@ router.Exchange = function (res) {
     });
     var options = {
         host: 'https://www.googleapis.com',
-        path: 'oauth2/v3/token',
+        path: '/oauth2/v3/token',
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
