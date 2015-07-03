@@ -18,8 +18,17 @@ var TOKEN_PATH = TOKEN_DIR + 'calendar-api-app.json';
  * @param res
  */
 router.callback = function (req, res) {
-    router.code = req.query.code;
-    router.Exchange(res);
+    fs.readFile(__dirname + '/../client_secret.json', function processClientSecrets(err, content) {
+        if (err) {
+            console.log('Error loading client secret file: ' + err);
+            return;
+        }
+        // Authorize a client with the loaded credentials, then call the
+        // Google Calendar API.
+        router.credentials = JSON.parse(content);
+        router.code = req.query.code;
+        router.Exchange(res);
+    });
 };
 
 

@@ -25,23 +25,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var authRouter = express.Router({ mergeParams: true });
 
-//app.use('/', routes);
-//app.use('/calendars', calendars);
-
-app.use('/authenticate', authRouter);
-authRouter.use('/callback', authenticate.authorize);
-authRouter.use('/', authenticate.callback);
-
 /* Include the app engine handlers to respond to start, stop, and health checks. */
 app.use(require('./lib/appengine-handlers'));
 
 
-
-var port = process.env.PORT || 1337;
-
 // [START hello_world]
 /* Say hello! */
 app.get('/', index);
+app.use('/authenticate', authRouter);
+authRouter.use('/callback', authenticate.callback);
+authRouter.use('/', authenticate.authorize);
+app.use('/calendar', calendar);
 // [END hello_world]
 
 // [START server]
