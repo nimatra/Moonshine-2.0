@@ -1,0 +1,17 @@
+{
+  "name": "Moonshine",
+  "version": "1.0.0",
+  "description": "Sunrise Challenge",
+  "repository": "https://github.com/nimatra/Moonshine2.git",
+  "private": true,
+  "scripts": {
+    "start": "node app.js",
+    "monitor": "nodemon app.js",
+    "deploy": "gcloud preview app deploy app.yaml"
+  },
+  "author": "Nima Tayebi",
+  "license": "Apache Version 2.0",
+  "dependencies": {
+    "express": "^4.12.0"
+  }
+}

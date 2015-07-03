@@ -41,7 +41,11 @@ var port = process.env.PORT || 1337;
 
 // [START hello_world]
 /* Say hello! */
-app.get('/', index);
+//app.get('/', index);
+
+app.get('/', function(req, res) {
+  res.status(200).send("Hello, world!");
+});
 // [END hello_world]
 
 // [START server]
