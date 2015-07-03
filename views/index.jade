@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  #container.col
+    p Login!
+    button(onclick="login()") authenticate
+  script.
+    function login() {
+      window.location.href = '/authenticate/callback'
+    }
