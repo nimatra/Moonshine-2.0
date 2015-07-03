@@ -61,63 +61,6 @@ router.authorize = function (req, res) {
     });
 };
 
-/**
- * Constructs the AuthUrl from client secrets
- * @returns {string}
- */
-function getAuthUrl() {
-
-    var authBaseUrl = router.credentials.web.auth_uri;
-    var redirectUri = router.credentials.web.redirect_uris[0];
-    var redirectUriTag = 'redirect_uri';
-    params = [];
-    params.push({
-        key: redirectUriTag.toString(),
-        value: redirectUri.toString()
-    });
-
-    var responseType = 'code';
-    var responseTypeTag = 'response_type';
-
-    params.push({
-        key: responseTypeTag.toString(),
-        value: responseType.toString()
-    });
-
-    var clientId = router.credentials.web.client_id;
-    var clientIdTag = 'client_id';
-
-    params.push({
-        key: clientIdTag.toString(),
-        value: clientId.toString()
-    });
-
-    var scope = 'https://www.googleapis.com/auth/calendar.readonly';
-    var scopeTag = 'scope';
-
-    params.push({
-        key: scopeTag.toString(),
-        value: scope.toString()
-    });
-
-    var approvalPrompt = 'force';
-    var approvalPromptTag = 'approval_prompt';
-
-    params.push({
-        key: approvalPromptTag.toString(),
-        value: approvalPrompt.toString()
-    });
-
-    var accessType = 'offline';
-    var accessTypeTag = 'access_type';
-
-    params.push({
-        key: accessTypeTag.toString(),
-        value: accessType.toString()
-    });
-
-    return authBaseUrl + '?' + EncodeQueryData(params);
-}
 
 router.Exchange = function (res) {
 
@@ -160,46 +103,12 @@ function exchangeApiCallback(response) {
 
     //the whole response has been recieved, so we just print it out here
     response.on('end', function () {
-        //exchanges = JSON.parse(str);
-        //router.AccessToken = exchanges.access_token;
-        router.res.render('callback', {title: str});
+        exchanges = JSON.parse(str);
+        router.AccessToken = exchanges.access_token;
+        router.res.redirect("../calendars?accessToken=" + router.AccessToken );
+        // router.res.render('callback', {title: str});
 
     });
-}
-
-
-function getExchangeParams() {
-
-    var redirectUri = router.credentials.web.redirect_uris[0];
-    var codeTag = 'code';
-    var clientIdTag = 'client_id';
-    var clientSecretTag = 'client_secret';
-    var redirectUriTag = 'redirect_uri';
-    var grantTag = 'grant_type';
-    params = [];
-    params.push({
-        key: redirectUriTag.toString(),
-        value: redirectUri.toString()
-    });
-    params.push({
-        key: clientIdTag.toString(),
-        value: router.credentials.web.client_id.toString()
-    });
-    params.push({
-        key: codeTag.toString(),
-        value: router.code.toString()
-    });
-    params.push({
-        key: clientSecretTag.toString(),
-        value: router.credentials.web.client_secret.toString()
-    });
-    params.push({
-        key: grantTag.toString(),
-        value: 'authorization_code'
-    });
-
-
-    return '?' + EncodeQueryData(params);
 }
 
 /**

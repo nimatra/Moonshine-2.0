@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var http = require('http');
 var index = require('./routes/index');
 var authenticate = require('./routes/authenticate');
-var calendar = require('./routes/calendar');
+var calendars = require('./routes/calendars');
 
 var app = express();
 // view engine setup
@@ -35,7 +35,7 @@ app.get('/', index);
 app.use('/authenticate', authRouter);
 authRouter.use('/callback', authenticate.callback);
 authRouter.use('/', authenticate.authorize);
-app.use('/calendar', calendar);
+app.use('/calendars', calendars);
 // [END hello_world]
 
 // [START server]
