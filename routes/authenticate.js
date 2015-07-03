@@ -1,6 +1,6 @@
 var express = require('express');
 var fs = require('fs');
-var http = require('http');
+var https = require('https');
 var querystring = require('querystring');
 
 
@@ -141,7 +141,7 @@ router.Exchange = function (res) {
         }
     };
     router.res = res;
-    var httpPost = http.request(options, exchangeApiCallback);
+    var httpPost = https.request(options, exchangeApiCallback);
     httpPost.write(data);
     httpPost.end();
 };
