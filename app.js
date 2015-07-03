@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var http = require('http');
 var index = require('./routes/index');
 var authenticate = require('./routes/authenticate');
-//var calendars = require('./routes/calendars');
+var calendar = require('./routes/calendar');
 
 var app = express();
 // view engine setup
