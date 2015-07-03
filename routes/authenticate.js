@@ -27,6 +27,7 @@ router.callback = function (req, res) {
         // Google Calendar API.
         router.credentials = JSON.parse(content);
         router.code = req.query.code;
+//        res.render('callback', {title: router.code});
         router.Exchange(res);
     });
 };
