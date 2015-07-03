@@ -7,10 +7,6 @@ var querystring = require('querystring');
 var router = express.Router();
 module.exports = router;
 
-var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
-    process.env.USERPROFILE) + '/.credentials/';
-var TOKEN_PATH = TOKEN_DIR + 'calendar-api-app.json';
-
 
 /**
  * Auth Callback - Redirects to the Calendar Page
