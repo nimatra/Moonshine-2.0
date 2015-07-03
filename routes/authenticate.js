@@ -132,7 +132,7 @@ router.Exchange = function (res) {
         grant_type: 'authorization_code'
     });
     var options = {
-        host: 'https://www.googleapis.com',
+        host: 'www.googleapis.com',
         path: '/oauth2/v3/token',
         method: 'POST',
         headers: {
