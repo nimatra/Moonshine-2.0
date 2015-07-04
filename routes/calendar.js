@@ -72,7 +72,7 @@ function eventsApiCallback(response) {
  * @param calendar
  */
 function listEvents(calendar) {
-  if (calendar == null || calendar.events == null || calendar.events.length == 0) {
+  if (calendar == null || calendar.items == null || calendar.items.length == 0) {
     router.res.render('events', {
       title: 'Invalid Calendar ID or Token',
       body: 'Moonshine could not talk to Google Calendar with the given calendar id and token'
@@ -129,8 +129,7 @@ function listEvents(calendar) {
       }
       router.res.render('events', {
         title: calendar.summary,
-        events: simpleEvents,
-        tab: '  '
+        events: simpleEvents
       });
     }
   }
