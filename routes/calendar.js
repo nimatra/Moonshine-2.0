@@ -7,18 +7,23 @@ var router = express.Router();
 
 module.exports = router;
 
-/* GET home page. */
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
 router.events = function (req, res, next) {
   var index = 11;
-  for(; index < req.originalUrl.length; index++){
-    if(req.originalUrl[index] == '/') {
+  for (; index < req.originalUrl.length; index++) {
+    if (req.originalUrl[index] == '/') {
       break;
     }
   }
-  if(index == req.originalUrl.length){
+  if (index == req.originalUrl.length) {
     throw "invalid parameters";
   }
-  router.calendarId = req.originalUrl.substring(11,index);
+  router.calendarId = req.originalUrl.substring(11, index);
   router.token = req.query.accessToken;
 
   var data = querystring.stringify({
@@ -26,7 +31,7 @@ router.events = function (req, res, next) {
   });
   var options = {
     host: 'www.googleapis.com',
-    path: '/calendar/v3/calendars/'+router.calendarId+'/events?'+data,
+    path: '/calendar/v3/calendars/' + router.calendarId + '/events?' + data,
     method: 'GET',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -36,6 +41,11 @@ router.events = function (req, res, next) {
   httpsRequest.end();
   router.res = res;
 };
+
+/**
+ *
+ * @param response
+ */
 function calendarApiCallback(response) {
   var str = '';
 
@@ -51,6 +61,10 @@ function calendarApiCallback(response) {
   });
 }
 
+/**
+ *
+ * @param calendar
+ */
 function listEvents(calendar) {
   var simpleEvents = [];
   var events = calendar.items;

@@ -1,4 +1,3 @@
-
 "use strict";
 var express = require('express');
 var path = require('path');
@@ -18,14 +17,14 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 
-var authRouter = express.Router({ mergeParams: true });
-var calendarRouter = express.Router({ mergeParams: true });
+var authRouter = express.Router({mergeParams: true});
+var calendarRouter = express.Router({mergeParams: true});
 
 /* Include the app engine handlers to respond to start, stop, and health checks. */
 app.use(require('./lib/appengine-handlers'));
@@ -43,7 +42,7 @@ calendarRouter.use('/', calendars.listCalendars);
 
 // [START server]
 /* Start the server */
-var server = app.listen(process.env.PORT || '8080', '0.0.0.0', function() {
+var server = app.listen(process.env.PORT || '8080', '0.0.0.0', function () {
   console.log('App listening at http://%s:%s', server.address().address, server.address().port);
   console.log("Press Ctrl+C to quit.");
 });

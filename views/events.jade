@@ -2,4 +2,4 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  p(style='white-space:pre;')= JSON.stringify(events, null, ' ')
+  p(style='white-space:pre;')= JSON.stringify(events, null, 2)

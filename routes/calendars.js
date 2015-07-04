@@ -12,24 +12,24 @@ module.exports = router;
  * @param res
  */
 router.listCalendars = function (req, res) {
-  if(req.originalUrl.substr(0,'/calendars/'.length) == '/calendars/'){
+  if (req.originalUrl.substr(0, '/calendars/'.length) == '/calendars/') {
     calendar.events(req, res);
     return;
   }
-    router.token = req.query.accessToken;
-    // options.path += getParams(token);
+  router.token = req.query.accessToken;
+  // options.path += getParams(token);
 
-    var options = {
-        host: 'www.googleapis.com',
-        path: '/calendar/v3/users/me/calendarList?access_token='+router.token,
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    };
-    var httpsRequest = https.request(options, calendarApiCallback);
-    httpsRequest.end();
-    router.res = res;
+  var options = {
+    host: 'www.googleapis.com',
+    path: '/calendar/v3/users/me/calendarList?access_token=' + router.token,
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+  var httpsRequest = https.request(options, calendarApiCallback);
+  httpsRequest.end();
+  router.res = res;
 };
 
 /**
@@ -37,20 +37,23 @@ router.listCalendars = function (req, res) {
  * @param response
  */
 function calendarApiCallback(response) {
-    var str = '';
+  var str = '';
 
-    //another chunk of data has been recieved, so append it to `str`
-    response.on('data', function (chunk) {
-        str += chunk;
-    });
+  //another chunk of data has been recieved, so append it to `str`
+  response.on('data', function (chunk) {
+    str += chunk;
+  });
 
-    //the whole response has been recieved, so we just print it out here
-    response.on('end', function () {
-        var calendars = JSON.parse(str);
-        listCalendars(calendars);
-    });
+  //the whole response has been recieved, so we just print it out here
+  response.on('end', function () {
+    var calendars = JSON.parse(str);
+    listCalendars(calendars);
+  });
 }
-
+/**
+ *
+ * @param calendars
+ */
 function listCalendars(calendars) {
   if (calendars.length == 0) {
     console.log('No calendars found.');
