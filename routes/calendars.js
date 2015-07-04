@@ -60,19 +60,20 @@ function listCalendars(calendars) {
             var simpleCalendar = [];
             for (var i = 0; i < calendars.items.length; i++) {
                 var calendar = calendars.items[i];
-                simpleCalendar[i] = [{
+                simpleCalendar[i] = {
                   id: calendar.id,
                   title: calendar.summary,
                   color: calendar.colorId,
-                  writable: true,
+                  writable: (calendar.accessRole == "owner") ||
+                            (calendar.accessRole == "writer"),
                   selected: calendar.selected,
                   timezone: calendar.timezone
-                }];
+                };
             }
-            
+
             router.res.render('calendars', {
                 title: 'Calendar List',
-                json: simpleCalendar
+                calendars: simpleCalendar
             });
         }
 }
