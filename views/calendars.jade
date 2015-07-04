@@ -4,7 +4,6 @@ block content
   h1= title
   p Welcome to #{title}
   each calendar in calendars
-    p [{
-    -for(var prop in calendar)
-      p #{prop}: #{calendar[prop]},
-    p }]
+    a(href="/calendars/#{calendar.id}/events?accessToken=#{token}") view events
+    p(style='white-space:pre;')= JSON.stringify(calendar, null, ' ')
+

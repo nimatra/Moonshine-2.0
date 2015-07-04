@@ -1,15 +1,10 @@
 var express = require('express');
 var https = require('https');
-var querystring = require('querystring');
+var urlencode = require('urlencode');
+var calendar = require('./calendar');
 
 var router = express.Router();
-
 module.exports = router;
-
-/* GET home page. */
-router.get('/', function (req, res, next) {
-    router.listCalendars(req, res);
-});
 
 /**
  * Lists all the calendars user has
@@ -17,12 +12,16 @@ router.get('/', function (req, res, next) {
  * @param res
  */
 router.listCalendars = function (req, res) {
-    var token = req.query.accessToken;
+  if(req.originalUrl.substr(0,'/calendars/'.length) == '/calendars/'){
+    calendar.events(req, res);
+    return;
+  }
+    router.token = req.query.accessToken;
     // options.path += getParams(token);
 
     var options = {
         host: 'www.googleapis.com',
-        path: '/calendar/v3/users/me/calendarList?access_token='+token,
+        path: '/calendar/v3/users/me/calendarList?access_token='+router.token,
         method: 'GET',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -53,27 +52,29 @@ function calendarApiCallback(response) {
 }
 
 function listCalendars(calendars) {
-        if (calendars.length == 0) {
-            console.log('No calendars found.');
-        } else {
-            console.log('Upcoming 10 events:');
-            var simpleCalendar = [];
-            for (var i = 0; i < calendars.items.length; i++) {
-                var calendar = calendars.items[i];
-                simpleCalendar[i] = {
-                  id: calendar.id,
-                  title: calendar.summary,
-                  color: calendar.colorId,
-                  writable: (calendar.accessRole == "owner") ||
-                            (calendar.accessRole == "writer"),
-                  selected: calendar.selected,
-                  timezone: calendar.timezone
-                };
-            }
+  if (calendars.length == 0) {
+    console.log('No calendars found.');
+  } else {
+    console.log('Upcoming 10 events:');
+    var simpleCalendar = [];
+    for (var i = 0; i < calendars.items.length; i++) {
+      var calendar = calendars.items[i];
+      simpleCalendar[i] = {
+        id: calendar.id,
+        title: calendar.summary,
+        color: calendar.colorId,
+        writable: (calendar.accessRole == "owner") ||
+        (calendar.accessRole == "writer"),
+        selected: calendar.selected,
+        timezone: calendar.timezone
+      };
+    }
 
-            router.res.render('calendars', {
-                title: 'Calendar List',
-                calendars: simpleCalendar
-            });
-        }
+    router.res.render('calendars', {
+      title: 'Calendar List',
+      calendars: simpleCalendar,
+      token: router.token,
+      tab: '  '
+    });
+  }
 }
