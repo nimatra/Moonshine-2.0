@@ -2,8 +2,10 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
-  each calendar in calendars
-    a(href="/calendars/#{calendar.id}/events?accessToken=#{token}") view events
-    p(style='white-space:pre;')= JSON.stringify(calendar, null, 2)
+  if(body != null)
+    p= body
+  else
+    each calendar in calendars
+      a(href="/calendars/#{calendarIds[calendar.id]}/events?accessToken=#{token}") view events
+      p(style='white-space:pre;')= JSON.stringify(calendar, null, 2)
 

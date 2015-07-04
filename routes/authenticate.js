@@ -10,8 +10,8 @@ module.exports = router;
 
 /**
  * Auth Callback - Redirects to the Calendar Page
- * @param req
- * @param res
+ * @param req request object from the google oauth callback
+ * @param res response object from the google oauth callback
  */
 router.callback = function (req, res) {
   fs.readFile(__dirname + '/../client_secret.json', function processClientSecrets(err, content) {
@@ -23,28 +23,23 @@ router.callback = function (req, res) {
     // Google Calendar API.
     router.credentials = JSON.parse(content);
     router.code = req.query.code;
-//        res.render('callback', {title: router.code});
     router.Exchange(res);
   });
 };
 
 
 /**
- * Authentication call
- * @param req
- * @param res
+ * Authentication call - redirects to google login page
+ * @param req request object from the get call to /authenticate
+ * @param res response object from the get call to /authenticate
  */
 router.authorize = function (req, res) {
-
-// Load client secrets from a local file.
 
   fs.readFile(__dirname + '/../client_secret.json', function processClientSecrets(err, content) {
     if (err) {
       console.log('Error loading client secret file: ' + err);
       return;
     }
-    // Authorize a client with the loaded credentials, then call the
-    // Google Calendar API.
     router.credentials = JSON.parse(content);
 
     var authParams = querystring.stringify({
@@ -62,9 +57,8 @@ router.authorize = function (req, res) {
 };
 
 /**
- *
- * @param res
- * @constructor
+ * Makes a http POST call to exchange the given code from the first call and get the token
+ * @param res - response object, it is used saved here to be used in the callback
  */
 router.Exchange = function (res) {
 
@@ -91,8 +85,8 @@ router.Exchange = function (res) {
 };
 
 /**
- *
- * @param response
+ * callback of the get token call - redirects to /calendars
+ * @param response - callback response
  */
 function exchangeApiCallback(response) {
   var str = '';
@@ -110,16 +104,4 @@ function exchangeApiCallback(response) {
     // router.res.render('callback', {title: str});
 
   });
-}
-
-/**
- * Encodes the parameters to the URI friendly format
- * @return {string}
- */
-function EncodeQueryData(data) {
-  var ret = [];
-  for (var d in data) {
-    ret.push(data[d].key + "=" + encodeURIComponent(data[d].value));
-  }
-  return ret.join("&");
 }

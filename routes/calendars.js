@@ -8,16 +8,26 @@ module.exports = router;
 
 /**
  * Lists all the calendars user has
+ * it first checks and redirects the events loading call to the calendar route
+ * /calendars?accessToken=<accessToken>
+ * /calendars/<calendarID>/events?accessToken=<accessToken>
  * @param req
  * @param res
  */
 router.listCalendars = function (req, res) {
+  // since /calendars/ and /calendars/* calls are routed to the same router we need to redirect them here
   if (req.originalUrl.substr(0, '/calendars/'.length) == '/calendars/') {
     calendar.events(req, res);
     return;
   }
+  if(req.query.accessToken == null) {
+    res.render('calendars', {
+      title: 'accessToken Parameter Missing',
+      body: 'Moonshine cannot talk to Google Calendar without an access token'
+    });
+    return;
+  }
   router.token = req.query.accessToken;
-  // options.path += getParams(token);
 
   var options = {
     host: 'www.googleapis.com',
@@ -50,18 +60,25 @@ function calendarApiCallback(response) {
     listCalendars(calendars);
   });
 }
+// calendar ids are not url friendly we need to create a urlencoded copy of them and pass it to the view
+router.calendarIdEncoded = [];
+
 /**
- *
+ * parses the json object retrieved from google api and constructs the desired json object for the view
+ * it then renders the view
  * @param calendars
  */
 function listCalendars(calendars) {
-  if (calendars.length == 0) {
-    console.log('No calendars found.');
+  if (calendars.length == 0 || calendars.items == null || calendars.items.length == 0) {
+    res.render('calendars', {
+      title: 'Invalid Token',
+      body: 'Moonshine could not talk to Google Calendar with the given token'
+    });
   } else {
-    console.log('Upcoming 10 events:');
     var simpleCalendar = [];
     for (var i = 0; i < calendars.items.length; i++) {
       var calendar = calendars.items[i];
+      router.calendarIdEncoded[calendar.id] = urlencode(calendar.id);
       simpleCalendar[i] = {
         id: calendar.id,
         title: calendar.summary,
@@ -74,10 +91,10 @@ function listCalendars(calendars) {
     }
 
     router.res.render('calendars', {
-      title: 'Calendar List',
+      title: 'Calendars List',
       calendars: simpleCalendar,
       token: router.token,
-      tab: '  '
+      calendarIds: router.calendarIdEncoded
     });
   }
 }
